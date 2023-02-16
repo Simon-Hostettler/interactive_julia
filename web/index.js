@@ -1,9 +1,9 @@
 let CVS_WIDTH = 1920;
 let CVS_HEIGHT = 1080;
-let MAX_ITER = 64;
 
 const canvasElement = document.querySelector("canvas");
 const angleSlider = document.getElementById("angleinput");
+const iterSlider = document.getElementById("iterinput");
 canvasElement.width = CVS_WIDTH;
 canvasElement.height = CVS_HEIGHT;
 const canvasContext = canvasElement.getContext("2d");
@@ -43,8 +43,15 @@ const runWasm = async () => {
   rustWasm = await init();
 
   const draw = (timestamp) => {
-    rustWasm.generate_image(CVS_WIDTH, CVS_HEIGHT, angleSlider.value);
-    rustWasm.iteration_points(CVS_WIDTH, CVS_HEIGHT, angleSlider.value, mousex, mousey);
+    rustWasm.generate_image(iterSlider.value, CVS_WIDTH, CVS_HEIGHT, angleSlider.value);
+    rustWasm.iteration_points(
+      iterSlider.value,
+      CVS_WIDTH,
+      CVS_HEIGHT,
+      angleSlider.value,
+      mousex,
+      mousey
+    );
 
     const outputPointer = rustWasm.get_output_buffer_pointer();
     const pointPointer = rustWasm.get_point_buffer_pointer();
@@ -53,7 +60,7 @@ const runWasm = async () => {
     const wasmPointArray = new Uint32Array(
       rustWasm.memory.buffer,
       pointPointer,
-      MAX_ITER * 2
+      iterSlider.value * 2
     );
 
     const imageDataArray = wasmByteMemoryArray.slice(
@@ -72,11 +79,12 @@ const runWasm = async () => {
 
     let hue = 0;
 
-    canvasContext.strokeStyle = "red";
+    canvasContext.strokeStyle = "DeepPink";
+    canvasContext.lineWidth = "2";
     canvasContext.beginPath();
     canvasContext.moveTo(p1x, p1y);
 
-    for (let i = 1; i < MAX_ITER; i++) {
+    for (let i = 1; i < iterSlider.value; i++) {
       p1x = wasmPointArray[2 * i];
       p1y = wasmPointArray[2 * i + 1];
 

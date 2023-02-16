@@ -8,12 +8,11 @@ use wasm_bindgen::prelude::*;
 
 const MAX_WIDTH: usize = 1920;
 const MAX_HEIGHT: usize = 1080;
-const MAX_ITER: u32 = 64;
 
 const OUTPUT_BUFFER_SIZE: usize = MAX_WIDTH * MAX_HEIGHT * 4;
 static mut OUTPUT_BUFFER: [u8; OUTPUT_BUFFER_SIZE] = [0; OUTPUT_BUFFER_SIZE];
 
-const POINT_BUFFER_SIZE: usize = MAX_ITER as usize * 2;
+const POINT_BUFFER_SIZE: usize = 256 * 2;
 static mut POINT_BUFFER: [u32; POINT_BUFFER_SIZE] = [0; POINT_BUFFER_SIZE];
 
 // Function to return a pointer to our buffer in wasm memory
@@ -38,7 +37,7 @@ pub fn get_point_buffer_pointer() -> *const u32 {
 }
 
 #[wasm_bindgen]
-pub fn iteration_points(width: usize, height: usize, angle: f64, mousex: f64, mousey: f64) {
+pub fn iteration_points(MAX_ITER: u32, width: usize, height: usize, angle: f64, mousex: f64, mousey: f64) {
     //stores all the iteration points of the selected coordinate
 
     let julia_complex: (f64, f64) = (0.7885 * angle.cos(), 0.7885 * angle.sin());
@@ -75,7 +74,7 @@ pub fn iteration_points(width: usize, height: usize, angle: f64, mousex: f64, mo
     }
 }
 #[wasm_bindgen]
-pub fn generate_image(width: usize, height: usize, angle: f64) {
+pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
 
     //colors to interpolate between dependent to # of iterations
     let col1 = Color {r: 19, g: 18, b: 28};
