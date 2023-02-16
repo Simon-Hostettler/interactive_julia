@@ -4,6 +4,7 @@ let CVS_HEIGHT = 1080;
 const canvasElement = document.querySelector("canvas");
 const angleSlider = document.getElementById("angleinput");
 const iterSlider = document.getElementById("iterinput");
+const rotateSwitch = document.getElementById("rotateSwitch");
 canvasElement.width = CVS_WIDTH;
 canvasElement.height = CVS_HEIGHT;
 const canvasContext = canvasElement.getContext("2d");
@@ -43,6 +44,10 @@ const runWasm = async () => {
   rustWasm = await init();
 
   const draw = (timestamp) => {
+    if (rotateSwitch.checked) {
+      angleSlider.value = (parseFloat(angleSlider.value) + 0.005) % (2.0 * Math.PI);
+    }
+
     rustWasm.generate_image(iterSlider.value, CVS_WIDTH, CVS_HEIGHT, angleSlider.value);
     rustWasm.iteration_points(
       iterSlider.value,
