@@ -38,10 +38,10 @@ pub fn get_point_buffer_pointer() -> *const u32 {
 }
 
 #[wasm_bindgen]
-pub fn iteration_points(width: usize, height: usize, mousex: f64, mousey: f64) {
+pub fn iteration_points(width: usize, height: usize, angle: f64, mousex: f64, mousey: f64) {
     //stores all the iteration points of the selected coordinate
 
-    let julia_complex: (f64, f64) = (-0.4, 0.6);
+    let julia_complex: (f64, f64) = (0.7885 * angle.cos(), 0.7885 * angle.sin());
 
     let img_ratio = (width as f64) / (height as f64);
     let x_range: (f64, f64) = (-1.5 * img_ratio, 3.0 * img_ratio);
@@ -75,7 +75,7 @@ pub fn iteration_points(width: usize, height: usize, mousex: f64, mousey: f64) {
     }
 }
 #[wasm_bindgen]
-pub fn generate_image(width: usize, height: usize, t: f64) {
+pub fn generate_image(width: usize, height: usize, angle: f64) {
 
     //colors to interpolate between dependent to # of iterations
     let col1 = Color {r: 19, g: 18, b: 28};
@@ -94,8 +94,8 @@ pub fn generate_image(width: usize, height: usize, t: f64) {
     //one rotation per 10s
     //let angle = (2.0 * PI) * t / 20000.0;
     
-    let julia_complex: (f64, f64) = (-0.4, 0.6);
-    //let julia_complex: (f64, f64) = (0.7885 * angle.cos(), 0.7885 * angle.sin());
+    //let julia_complex: (f64, f64) = (-0.4, 0.6);
+    let julia_complex: (f64, f64) = (0.7885 * angle.cos(), 0.7885 * angle.sin());
 
     for x in 0..width {
         for y in 0..height {

@@ -3,6 +3,7 @@ let CVS_HEIGHT = 1080;
 let MAX_ITER = 64;
 
 const canvasElement = document.querySelector("canvas");
+const angleSlider = document.getElementById("angleinput");
 canvasElement.width = CVS_WIDTH;
 canvasElement.height = CVS_HEIGHT;
 const canvasContext = canvasElement.getContext("2d");
@@ -42,8 +43,8 @@ const runWasm = async () => {
   rustWasm = await init();
 
   const draw = (timestamp) => {
-    rustWasm.generate_image(CVS_WIDTH, CVS_HEIGHT, timestamp);
-    rustWasm.iteration_points(CVS_WIDTH, CVS_HEIGHT, mousex, mousey);
+    rustWasm.generate_image(CVS_WIDTH, CVS_HEIGHT, angleSlider.value);
+    rustWasm.iteration_points(CVS_WIDTH, CVS_HEIGHT, angleSlider.value, mousex, mousey);
 
     const outputPointer = rustWasm.get_output_buffer_pointer();
     const pointPointer = rustWasm.get_point_buffer_pointer();
