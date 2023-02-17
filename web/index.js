@@ -27,16 +27,6 @@ function getMousePos(canvas, evt) {
   };
 }
 
-canvasElement.addEventListener(
-  "click",
-  function (evt) {
-    var mousePos = getMousePos(canvasElement, evt);
-    mousex = mousePos.x;
-    mousey = mousePos.y;
-  },
-  false
-);
-
 let rustWasm;
 let lastTimeStamp = 0.0;
 let wasStopped = true;
@@ -114,6 +104,17 @@ const runWasm = async () => {
     angleValue.innerText = angle.toFixed(3);
     lastFrame = requestAnimationFrame(drawAnimation);
   };
+
+  canvasElement.addEventListener(
+    "click",
+    function (evt) {
+      var mousePos = getMousePos(canvasElement, evt);
+      mousex = mousePos.x;
+      mousey = mousePos.y;
+      draw();
+    },
+    false
+  );
 
   angleSlider.addEventListener(
     "input",
