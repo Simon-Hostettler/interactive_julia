@@ -6,8 +6,8 @@ use std::f64::consts::PI;
 
 use wasm_bindgen::prelude::*;
 
-const MAX_WIDTH: usize = 1920;
-const MAX_HEIGHT: usize = 1080;
+const MAX_WIDTH: usize = 2560;
+const MAX_HEIGHT: usize = 1440;
 
 const OUTPUT_BUFFER_SIZE: usize = MAX_WIDTH * MAX_HEIGHT * 4;
 static mut OUTPUT_BUFFER: [u8; OUTPUT_BUFFER_SIZE] = [0; OUTPUT_BUFFER_SIZE];
@@ -37,10 +37,16 @@ pub fn get_point_buffer_pointer() -> *const u32 {
 }
 
 #[wasm_bindgen]
-pub fn iteration_points(MAX_ITER: u32, width: usize, height: usize, angle: f64, mousex: f64, mousey: f64) {
+pub fn iteration_points(
+    MAX_ITER: u32,
+    width: usize,
+    height: usize,
+    angle: f64,
+    mousex: f64,
+    mousey: f64,
+) {
     //stores all the iteration points of the selected coordinate
 
-    
     let julia_complex: (f64, f64) = (0.7885 * angle.cos(), 0.7885 * angle.sin());
 
     let img_ratio = (width as f64) / (height as f64);
@@ -55,34 +61,44 @@ pub fn iteration_points(MAX_ITER: u32, width: usize, height: usize, angle: f64, 
     let mut it: u32 = 1;
     unsafe {
         POINT_BUFFER = [0; POINT_BUFFER_SIZE];
-        POINT_BUFFER[0] = (((zx - x_range.0) / x_range.1) * width as f64)as u32;
+        POINT_BUFFER[0] = (((zx - x_range.0) / x_range.1) * width as f64) as u32;
         POINT_BUFFER[1] = height as u32 - (((zy - y_range.0) / y_range.1) * height as f64) as u32;
     }
-   
 
     while (zx * zx + zy * zy) <= 4.0 && it < MAX_ITER {
-
         let xtemp = zx * zx - (zy * zy);
         zy = (2.0 * zx * zy) + julia_complex.1;
         zx = xtemp + julia_complex.0;
 
         unsafe {
-            POINT_BUFFER[2 * it as usize] = (((zx - x_range.0) / x_range.1) * width as f64)as u32;
-            POINT_BUFFER[2* it as usize + 1] = height as u32 - (((zy - y_range.0) / y_range.1) * height as f64) as u32;
+            POINT_BUFFER[2 * it as usize] = (((zx - x_range.0) / x_range.1) * width as f64) as u32;
+            POINT_BUFFER[2 * it as usize + 1] =
+                height as u32 - (((zy - y_range.0) / y_range.1) * height as f64) as u32;
         }
-        
+
         it += 1;
     }
 }
 #[wasm_bindgen]
 pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
-
     //colors to interpolate between dependent to # of iterations
-    let col1 = Color {r: 19, g: 18, b: 28};
-    let col2 = Color {r: 92, g: 153, b: 209};
-    let col3 = Color {r: 248, g: 255, b: 199};
-    let col_map1 = ColorMap {c1: col1, c2: col2};
-    let col_map2 = ColorMap {c1: col2, c2: col3};
+    let col1 = Color {
+        r: 19,
+        g: 18,
+        b: 28,
+    };
+    let col2 = Color {
+        r: 92,
+        g: 153,
+        b: 209,
+    };
+    let col3 = Color {
+        r: 248,
+        g: 255,
+        b: 199,
+    };
+    let col_map1 = ColorMap { c1: col1, c2: col2 };
+    let col_map2 = ColorMap { c1: col2, c2: col3 };
 
     let img_ratio = (width as f64) / (height as f64);
     let x_range: (f64, f64) = (-1.5 * img_ratio, 3.0 * img_ratio);
@@ -95,7 +111,6 @@ pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
 
     for x in 0..width {
         for y in 0..height {
-
             let mut zx = x_range.0 + (x as f64) * x_unit;
             let mut zy = y_range.0.abs() - (y as f64) * y_unit;
             let mut it: u32 = 0;
@@ -107,7 +122,6 @@ pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
                 it += 1;
             }
 
-            
             let buffer_index = 4 * (y * width + x);
             let col: Color;
             if it < MAX_ITER / 2 {
