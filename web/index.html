@@ -9,35 +9,36 @@
 </head>
 <body bgcolor=”#000000">
 <script type="module" src="index.js"></script>
-  <div class="slider">
+  <div class="settings">
+
     <p>f(z) = z<sup>2</sup> + 0.7885 * e<sup>iφ</sup></p>
-  <div class="subslider">
-    <p>φ =</p><input id="angleinput" type="range" min="0.0" max="6.28318530718" step="0.005" value="0.0" oninput="rangeValue.innerText = this.value"><p id="rangeValue">0.0</p>
+
+    <div class="slider">
+      <p>φ =</p>
+      <input class="sliderinput" id="angleinput" type="range" min="0.0" max="6.28318530718" step="0.005" value="0.0" oninput="rangeValue.innerText = this.value">
+      <p id="rangeValue">0.0</p>
+    </div>
+
+    <div class="slider">
+      <p>Num of it =</p>
+      <input class="sliderinput" id="iterinput" type="range" min="16" max="256" step="16" value="16" oninput="iterValue.innerText = this.value">
+      <p id="iterValue">16</p>
+    </div>
+
+    <div class="switchbox">
+      <p>Rotate </p>
+      <label class="switch">
+        <input type="checkbox" id="rotateSwitch">
+        <span class="switchslider round"></span>
+      </label>
+    </div>
+
   </div>
-  <div class="subslider">
-    <p># iterations =</p>
-    <input id="iterinput" type="range" min="16" max="256" step="16" value="64" oninput="iterValue.innerText = this.value">
-  <p id="iterValue">64</p>
-  </div>
-  <div class="switchbox">
-    <p>rotate </p>
-    <label class="switch">
-      <input type="checkbox" id="rotateSwitch">
-      <span class="switchslider round"></span>
-    </label>
-  </div>
-  </div>
+  
   <canvas
-    width="100%"
-    style="image-rendering: pixelated; image-rendering: crisp-edges; width: 100%;"
+    style="image-rendering: pixelated; image-rendering: crisp-edges;"
   >
   </canvas>
-
-  
-
-  <!-- <script type="module">
-    new Worker(new URL('worker.js', import.meta.url), { type: 'module' });
-  </script> -->
 
 </body>
 </html>

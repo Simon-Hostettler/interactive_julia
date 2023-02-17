@@ -3,6 +3,7 @@ let CVS_HEIGHT = 1080;
 
 const canvasElement = document.querySelector("canvas");
 const angleSlider = document.getElementById("angleinput");
+const angleValue = document.getElementById("rangeValue");
 const iterSlider = document.getElementById("iterinput");
 const rotateSwitch = document.getElementById("rotateSwitch");
 canvasElement.width = CVS_WIDTH;
@@ -20,7 +21,6 @@ function getMousePos(canvas, evt) {
     scaleX = canvas.width / rect.width, // relationship bitmap vs. element for x
     scaleY = canvas.height / rect.height; // relationship bitmap vs. element for y
 
-  console.log("scale at: ", scaleX, scaleY);
   return {
     x: (evt.clientX - rect.left) * scaleX, // scale mouse coordinates after they have
     y: (evt.clientY - rect.top) * scaleY, // been adjusted to be relative to element
@@ -33,27 +33,27 @@ canvasElement.addEventListener(
     var mousePos = getMousePos(canvasElement, evt);
     mousex = mousePos.x;
     mousey = mousePos.y;
-    console.log("clicked at: ", mousex, mousey);
   },
   false
 );
 
 let rustWasm;
+let lastTimeStamp = 0.0;
+let wasStopped = true;
+let angle = 0.0;
 
 const runWasm = async () => {
   rustWasm = await init();
 
-  const draw = (timestamp) => {
-    if (rotateSwitch.checked) {
-      angleSlider.value = (parseFloat(angleSlider.value) + 0.005) % (2.0 * Math.PI);
-    }
+  let lastFrame = null;
 
-    rustWasm.generate_image(iterSlider.value, CVS_WIDTH, CVS_HEIGHT, angleSlider.value);
+  const draw = () => {
+    rustWasm.generate_image(iterSlider.value, CVS_WIDTH, CVS_HEIGHT, angle);
     rustWasm.iteration_points(
       iterSlider.value,
       CVS_WIDTH,
       CVS_HEIGHT,
-      angleSlider.value,
+      angle,
       mousex,
       mousey
     );
@@ -98,11 +98,54 @@ const runWasm = async () => {
       canvasContext.lineTo(p1x, p1y);
     }
     canvasContext.stroke();
-
-    requestAnimationFrame(draw);
   };
 
-  requestAnimationFrame(draw);
+  const drawAnimation = (timestamp) => {
+    let deltaTime = 0.0;
+    if (!wasStopped) {
+      deltaTime = timestamp - lastTimeStamp;
+    }
+    wasStopped = false;
+    lastTimeStamp = timestamp;
+
+    draw();
+    angle += ((deltaTime / 20000.0) * 2.0 * Math.PI) % (2.0 * Math.PI);
+    angleSlider.value = angle;
+    angleValue.innerText = angle.toFixed(3);
+    lastFrame = requestAnimationFrame(drawAnimation);
+  };
+
+  angleSlider.addEventListener(
+    "input",
+    function (evt) {
+      angle = parseFloat(angleSlider.value);
+      draw();
+    },
+    false
+  );
+
+  iterSlider.addEventListener(
+    "input",
+    function (evt) {
+      draw();
+    },
+    false
+  );
+
+  rotateSwitch.addEventListener(
+    "change",
+    function (evt) {
+      if (!rotateSwitch.checked) {
+        cancelAnimationFrame(lastFrame);
+        wasStopped = true;
+      } else {
+        lastFrame = requestAnimationFrame(drawAnimation);
+      }
+    },
+    false
+  );
+
+  draw();
 };
 
 runWasm();
