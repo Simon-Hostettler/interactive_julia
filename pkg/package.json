@@ -1,0 +1,12 @@
+{
+  "name": "interactive_julia",
+  "version": "0.1.0",
+  "files": [
+    "interactive_julia_bg.wasm",
+    "interactive_julia.js",
+    "interactive_julia.d.ts"
+  ],
+  "module": "interactive_julia.js",
+  "types": "interactive_julia.d.ts",
+  "sideEffects": false
+}
