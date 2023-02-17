@@ -1,14 +1,13 @@
-let CVS_WIDTH = 1920;
-let CVS_HEIGHT = 1080;
-
 const canvasElement = document.querySelector("canvas");
 const angleSlider = document.getElementById("angleinput");
 const angleValue = document.getElementById("rangeValue");
 const iterSlider = document.getElementById("iterinput");
 const rotateSwitch = document.getElementById("rotateSwitch");
+const canvasContext = canvasElement.getContext("2d");
+let CVS_WIDTH = canvasElement.getBoundingClientRect().width;
+let CVS_HEIGHT = canvasElement.getBoundingClientRect().height;
 canvasElement.width = CVS_WIDTH;
 canvasElement.height = CVS_HEIGHT;
-const canvasContext = canvasElement.getContext("2d");
 const canvasImageData = canvasContext.createImageData(CVS_WIDTH, CVS_HEIGHT);
 canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
