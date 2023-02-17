@@ -99,7 +99,7 @@ const runWasm = async () => {
     lastTimeStamp = timestamp;
 
     draw();
-    angle += ((deltaTime / 20000.0) * 2.0 * Math.PI) % (2.0 * Math.PI);
+    angle = (angle + (deltaTime / 20000.0) * 2.0 * Math.PI) % (2.0 * Math.PI);
     angleSlider.value = angle;
     angleValue.innerText = angle.toFixed(3);
     lastFrame = requestAnimationFrame(drawAnimation);
