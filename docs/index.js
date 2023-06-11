@@ -71,8 +71,6 @@ const runWasm = async () => {
     let p1x = wasmPointArray[0],
       p1y = wasmPointArray[1];
 
-    let hue = 0;
-
     canvasContext.strokeStyle = "DeepPink";
     canvasContext.lineWidth = "2";
     canvasContext.beginPath();

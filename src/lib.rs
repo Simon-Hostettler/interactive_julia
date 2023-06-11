@@ -59,6 +59,7 @@ pub fn iteration_points(
     let mut zx = x_range.0 + (mousex) * x_unit;
     let mut zy = y_range.0.abs() - (mousey) * y_unit;
     let mut it: u32 = 1;
+
     unsafe {
         POINT_BUFFER = [0; POINT_BUFFER_SIZE];
         POINT_BUFFER[0] = (((zx - x_range.0) / x_range.1) * width as f64) as u32;
@@ -79,6 +80,7 @@ pub fn iteration_points(
         it += 1;
     }
 }
+
 #[wasm_bindgen]
 pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
     //colors to interpolate between dependent to # of iterations
