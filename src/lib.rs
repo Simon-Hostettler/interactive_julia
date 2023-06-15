@@ -2,8 +2,6 @@ pub mod colormap;
 
 use colormap::*;
 
-use std::f64::consts::PI;
-
 use wasm_bindgen::prelude::*;
 
 const MAX_WIDTH: usize = 2560;
@@ -38,7 +36,7 @@ pub fn get_point_buffer_pointer() -> *const u32 {
 
 #[wasm_bindgen]
 pub fn iteration_points(
-    MAX_ITER: u32,
+    max_iter: u32,
     width: usize,
     height: usize,
     angle: f64,
@@ -66,7 +64,7 @@ pub fn iteration_points(
         POINT_BUFFER[1] = height as u32 - (((zy - y_range.0) / y_range.1) * height as f64) as u32;
     }
 
-    while (zx * zx + zy * zy) <= 4.0 && it < MAX_ITER {
+    while (zx * zx + zy * zy) <= 4.0 && it < max_iter {
         let xtemp = zx * zx - (zy * zy);
         zy = (2.0 * zx * zy) + julia_complex.1;
         zx = xtemp + julia_complex.0;
@@ -82,7 +80,7 @@ pub fn iteration_points(
 }
 
 #[wasm_bindgen]
-pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
+pub fn generate_image(max_iter: u32, width: usize, height: usize, angle: f64) {
     //colors to interpolate between dependent to # of iterations
     let col1 = Color {
         r: 19,
@@ -117,7 +115,7 @@ pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
             let mut zy = y_range.0.abs() - (y as f64) * y_unit;
             let mut it: u32 = 0;
 
-            while (zx * zx + zy * zy) <= 4.0 && it < MAX_ITER {
+            while (zx * zx + zy * zy) <= 4.0 && it < max_iter {
                 let xtemp = zx * zx - (zy * zy);
                 zy = (2.0 * zx * zy) + julia_complex.1;
                 zx = xtemp + julia_complex.0;
@@ -126,10 +124,10 @@ pub fn generate_image(MAX_ITER: u32, width: usize, height: usize, angle: f64) {
 
             let buffer_index = 4 * (y * width + x);
             let col: Color;
-            if it < MAX_ITER / 2 {
-                col = col_map1.get_col_lin(it as f64 / (MAX_ITER / 2) as f64)
+            if it < max_iter / 2 {
+                col = col_map1.get_col_lin(it as f64 / (max_iter / 2) as f64)
             } else {
-                col = col_map2.get_col_lin((it - MAX_ITER / 2) as f64 / (MAX_ITER / 2) as f64);
+                col = col_map2.get_col_lin((it - max_iter / 2) as f64 / (max_iter / 2) as f64);
             }
 
             unsafe {
