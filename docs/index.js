@@ -4,12 +4,10 @@ const angleValue = document.getElementById("rangeValue");
 const iterSlider = document.getElementById("iterinput");
 const rotateSwitch = document.getElementById("rotateSwitch");
 const canvasContext = canvasElement.getContext("2d");
-let CVS_WIDTH = canvasElement.getBoundingClientRect().width;
-let CVS_HEIGHT = canvasElement.getBoundingClientRect().height;
-canvasElement.width = CVS_WIDTH;
-canvasElement.height = CVS_HEIGHT;
-const canvasImageData = canvasContext.createImageData(CVS_WIDTH, CVS_HEIGHT);
-canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+const CVS_WIDTH = (canvasElement.width = window.innerWidth);
+const CVS_HEIGHT = (canvasElement.height = window.innerHeight);
+const ctx = canvasElement.getContext("2d");
+const canvasImageData = ctx.createImageData(CVS_WIDTH, CVS_HEIGHT);
 
 import init from "../pkg/interactive_julia.js";
 let mousex;
